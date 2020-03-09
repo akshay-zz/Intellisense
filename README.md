@@ -16,7 +16,7 @@ Json Body<br>
 }
 
 **GetBasicAutoCompletion** [POST]<br>
-To get basis fixed sugesstion independent of cursor position.
+To get basic fixed sugesstion, independent of cursor position.
 Json Body<br>
 {
   "Language":"Csharp"
