@@ -1,16 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Services.Implementation;
+using Services.Interface;
 
 namespace Api.Http
 {
@@ -26,8 +21,11 @@ namespace Api.Http
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-
+			services.AddCors();
 			services.AddControllers();
+			services.AddTransient<IMonacoSuggestionRepository, CsharpMonacoSuggestionRepository>();
+			services.AddTransient<ISuggestionServiceProvider, MonacoSuggestionRepositoryServiceProvider>();
+
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api.Http", Version = "v1" });
@@ -44,8 +42,10 @@ namespace Api.Http
 				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api.Http v1"));
 			}
 
+			app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+			
 			app.UseHttpsRedirection();
-
+			
 			app.UseRouting();
 
 			app.UseAuthorization();
